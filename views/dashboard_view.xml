@@ -1,0 +1,14 @@
+<odoo>
+<data>
+    <record id="hr_employee_dashboard_action" model="ir.actions.client">
+        <field name="name">Employee Dashboard</field>
+        <field name="tag">hr_employee_dashboard</field>
+    </record>
+
+    <menuitem name="Employee Dashboard"
+            id="menu_hr_employee_dashboard"
+            parent="spreadsheet_dashboard.spreadsheet_dashboard_menu_root"
+            sequence="1"
+            action="hr_employee_dashboard_action" />
+    </data>
+</odoo>

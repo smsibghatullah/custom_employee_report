@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="my_module.HrEmployeeDashboard">
+        <div class="container">
+            <!-- Company Logo and Name -->
+            <br/>
+            <div class="row mt-5">
+                <div class="col-md-12  ">
+                    <img id="company_logo" src="" style="height: 100px; width: auto; margin-right: 10px;" />
+                    <h2 id="company_name"></h2>
+                </div>
+            </div>
+
+            <h1 style="text-align:center;font-weight:bold;margin-top:50px;font-size:40px;margin-bottom:50px">
+                Employee Dashboard
+            </h1>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div style="background-color: #4CAF50; color: white; box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.3);">
+                        <div class="card-body text-center">
+                            <div style="font-size: 50px; margin-bottom: 15px;">
+                                <i class="fa fa-user"></i>
+                            </div>
+                            <h3>Omani Employees</h3>
+                            <p id="omani_count" style="font-size: 24px;">0</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div style="background-color: #FF5722; color: white; box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.3);">
+                        <div class="card-body text-center">
+                            <div style="font-size: 50px; margin-bottom: 15px;">
+                                <i class="fa fa-users"></i>
+                            </div>
+                            <h3>Non-Omani Employees</h3>
+                            <p id="non_omani_count" style="font-size: 24px;">0</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" style="margin-top: 60px;">
+                <div class="col-md-12">
+                    <div style="background-color: #F19ED2; color: white; box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.3);">
+                        <div class="card-body">
+                            <h3 class="text-center">Age Distribution</h3>
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Omani/Non-Omani</th>
+                                        <th>18-30</th>
+                                        <th>31-40</th>
+                                        <th>41-50</th>
+                                        <th>51-60</th>
+                                        <th>61-65</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Omani</td>
+                                        <td id="age_18_30_omani">0</td>
+                                        <td id="age_31_40_omani">0</td>
+                                        <td id="age_41_50_omani">0</td>
+                                        <td id="age_51_60_omani">0</td>
+                                        <td id="age_61_65_omani">0</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Non-Omani</td>
+                                        <td id="age_18_30_non_omani">0</td>
+                                        <td id="age_31_40_non_omani">0</td>
+                                        <td id="age_41_50_non_omani">0</td>
+                                        <td id="age_51_60_non_omani">0</td>
+                                        <td id="age_61_65_non_omani">0</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

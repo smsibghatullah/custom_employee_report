@@ -1,0 +1,391 @@
+<odoo>
+  <data>
+    <record id="view_employee_form_inherit" model="ir.ui.view">
+        <field name="name">hr.employee.form.inherit</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <header>
+                <button name="action_download_employment_certificate" type="object" class="btn-primary"
+                  invisible="is_logged_user_employee == False"   string="Request Employment Certificate"/>
+                <button name="action_download_employment_salary" type="object" class="btn-primary"
+                   invisible="is_logged_user_employee == False" string="Request Salary Letter"/>
+                <button name="action_download_report_salary_transfer_letter" type="object" class="btn-primary"
+                  invisible="is_logged_user_employee == False"  string="Salary Transfer Letter"/>
+                <button name="action_download_report_no_objection_certificate" type="object" class="btn-primary"
+                   invisible="is_logged_user_employee == False" string="No Objection Certificate"/>
+            </header>
+             <xpath expr="//field[@name='coach_id']" position="after">
+                        <field name="is_omani" invisible="is_admin_user_employee == False" />
+                        <field name="is_non_omani" invisible="is_admin_user_employee == False" />
+                        <field name="is_logged_user_employee" invisible='1'/>
+                        <field name="is_admin_user_employee" invisible='1'/>
+            </xpath>
+            <xpath expr="//field[@name='resume_line_ids']" position="replace">
+                <field mode="tree" nolabel="1"  readonly="is_logged_user_employee == False" name="resume_line_ids" widget="resume_one2many">
+                                    <tree>
+                                        <field name="line_type_id"/>
+                                        <field name="name"/>
+                                        <field name="description"/>
+                                        <field name="date_start"/>
+                                        <field name="date_end"/>
+                                        <field name="display_type" column_invisible="True"/>
+                                    </tree>
+                                </field>
+            </xpath>
+            <xpath expr="//button[@name='action_open_contract']" position="replace">
+                <button name="action_open_contract" class="oe_stat_button" icon="fa-book" type="object"  context="{'default_employee_id': id}" invisible="is_logged_user_employee == False or employee_type not in ['employee', 'student', 'trainee']">
+                            <div invisible="not first_contract_date" class="o_stat_info">
+                                <span class="o_stat_text text-success" invisible="contract_warning" title="In Contract Since"> In Contract Since</span>
+                                <span class="o_stat_value text-success" invisible="contract_warning">
+                                    <field name="first_contract_date" readonly="1"/>
+                                </span>
+                                <span class="o_stat_text text-danger" invisible="not contract_warning" title="In Contract Since">
+                                    In Contract Since
+                                </span>
+                                <span class="o_stat_value text-danger" invisible="not contract_warning">
+                                    <field name="first_contract_date" readonly="1"/>
+                                </span>
+                            </div>
+                            <div invisible="first_contract_date" class="o_stat_info">
+                                <span class="o_stat_value text-danger">
+                                    <field name="contracts_count"/>
+                                </span>
+                                <span invisible="contracts_count != 1" class="o_stat_text text-danger">
+                                    Contract
+                                </span>
+                                <span invisible="contracts_count == 1" class="o_stat_text text-danger">
+                                    Contracts
+                                </span>
+                            </div>
+                        </button>
+            </xpath>
+            <xpath expr="//button[@name='%(hr.plan_wizard_action)d']" position="attributes">
+                <attribute name="invisible">is_admin_user_employee == False or not active</attribute>
+            </xpath>
+            <xpath expr="//field[@name='employee_skill_ids']" position="replace">
+                <field mode="tree" nolabel="1"  readonly="is_logged_user_employee == False" name="employee_skill_ids" widget="skills_one2many" class="mt-2">
+                                    <tree>
+                                        <field name="skill_id"/>
+                                        <field name="skill_level_id"/>
+                                        <field name="level_progress" widget="progressbar"/>
+                                        <field name="skill_type_id" optional="hidden"/>
+                                    </tree>
+                                </field>
+            </xpath>
+           
+            <xpath expr="//field[@name='name']" position="replace">
+                <field name="name" placeholder="Employee's Name"  readonly="is_logged_user_employee == False" required="True" style="font-size: min(4vw, 2.6rem);"/>
+            </xpath>
+            <xpath expr="//field[@name='job_title']" position="replace">
+                 <field name="job_title" readonly="is_logged_user_employee == False" placeholder="Job Position"/>
+            </xpath>
+            <xpath expr="//field[@name='category_ids']" position="replace">
+                    <field name="category_ids" widget="many2many_tags" readonly="is_logged_user_employee == False" options="{'color_field': 'color', 'no_create_edit': True}" placeholder="Tags" groups="hr.group_hr_user"/>
+            </xpath>
+            <xpath expr="//field[@name='image_1920']" position="replace">
+                <field name="image_1920" widget="image" readonly="is_logged_user_employee == False" class="oe_avatar m-0" options="{&quot;zoom&quot;: true, &quot;preview_image&quot;:&quot;avatar_128&quot;}"/>
+            </xpath>
+            <xpath expr="//field[@name='show_hr_icon_display']" position="replace"> 
+                <field name="show_hr_icon_display" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='hr_icon_display']" position="replace"> 
+                <field name="hr_icon_display" readonly="is_logged_user_employee == False" class="d-flex align-items-end fs-6 o_employee_availability" invisible="not show_hr_icon_display or not id" widget="hr_presence_status"/>
+            </xpath>
+             <xpath expr="//field[@name='mobile_phone']" position="replace">
+                 <field name="mobile_phone" readonly="is_logged_user_employee == False" widget="phone"/>
+            </xpath>
+             <xpath expr="//field[@name='work_phone']" position="replace">
+                 <field name="work_phone" readonly="is_logged_user_employee == False" widget="phone"/>
+            </xpath>
+             <xpath expr="//field[@name='work_email']" position="replace">
+                   <field name="work_email" readonly="is_logged_user_employee == False" widget="email"/>
+            </xpath>
+            
+            <xpath expr="//field[@name='department_id']" position="replace">
+                <field name="department_id" readonly="is_logged_user_employee == False" />
+            </xpath>
+            <xpath expr="//field[@name='job_id']" position="replace">
+                <field name="job_id" readonly="is_logged_user_employee == False" />
+            </xpath>
+            <xpath expr="//field[@name='parent_id']" position="replace">
+                <field name="parent_id" readonly="is_admin_user_employee == False"  widget="many2one_avatar_user"/>
+            </xpath>
+            <xpath expr="//field[@name='coach_id']" position="replace">
+                <field name="coach_id" readonly="is_admin_user_employee == False"  widget="many2one_avatar_user"/>
+            </xpath>
+
+             <xpath expr="//div[@id='o_work_employee_main']" position="replace">
+                            <div id="o_work_employee_main" class="flex-grow-1">
+                                <group string="Location">
+                                    <field name="address_id" context="{'show_address': 1}" options="{&quot;highlight_first_line&quot;: True}"
+                                        readonly="is_logged_user_employee == False"/>
+                                    <field name="work_location_id" context="{'default_address_id': address_id}"
+                                        readonly="is_logged_user_employee == False"/>
+                                </group>
+
+                                <group name="managers" string="Approvers" class="hide-group-if-empty" readonly="is_logged_user_employee == False" >
+                                </group>
+
+                                <group name="departure" string="Departure" invisible="active or not is_logged_user_employee">
+                                    <field name="departure_reason_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}"
+                                        readonly="is_logged_user_employee == False"/>
+                                    <field name="departure_description"
+                                        readonly="is_logged_user_employee == False"/>
+                                    <field name="departure_date"
+                                        readonly="is_logged_user_employee == False"/>
+                                </group>
+
+                                <group string="Schedule" invisible="not is_logged_user_employee">
+                                    <field name="resource_calendar_id"
+                                        readonly="is_logged_user_employee == False"/>
+                                    <field name="id" invisible="1"/>
+                                    <field name="tz" required="id"
+                                        readonly="is_logged_user_employee == False"/>
+                                </group>
+                            </div>
+             </xpath>
+            <xpath expr="//page[@name='personal_information']" position="replace">
+                     <page name="personal_information" string="Private Information"  invisible="is_logged_user_employee == False" groups="hr.group_hr_user">
+                                <group>
+                                    <group string="Private Contact">
+                                        <label for="private_street" string="Private Address"/>
+                                        <div class="o_address_format">
+                                            <field name="private_street"  placeholder="Street..." class="o_address_street"/>
+                                            <field name="private_street2" placeholder="Street 2..." class="o_address_street"/>
+                                            <field name="private_city" placeholder="City" class="o_address_city"/>
+                                            <field name="private_state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}" context="{'default_country_id': private_country_id}"/>
+                                            <field name="private_zip" placeholder="ZIP" class="o_address_zip"/>
+                                            <field name="private_country_id" placeholder="Country" class="o_address_country" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>
+                                        </div>
+                                        <field name="private_email" string="Email"/>
+                                        <field name="private_phone" string="Phone"/>
+                                        <field name="bank_account_id" context="{'default_partner_id': work_contact_id}" options="{'no_quick_create': True}" readonly="not id"/>
+                                        <field name="lang" string="Language"/>
+                                        <label for="km_home_work"/>
+                                        <div class="o_row" name="div_km_home_work">
+                                            <field name="km_home_work" class="o_hr_narrow_field"/>
+                                            <span>Km</span>
+                                        </div>
+                                        <field name="private_car_plate"/>
+                                    </group>
+                                    <group string="Family Status">
+                                        <field name="marital"/>
+                                        <field name="spouse_complete_name" invisible="marital not in ['married', 'cohabitant']"/>
+                                        <field name="spouse_birthdate" invisible="marital not in ['married', 'cohabitant']"/>
+                                        <field name="children"/>
+                                    </group>
+                                    <group string="Emergency" name="emergency">
+                                        <field name="emergency_contact"/>
+                                        <field name="emergency_phone" class="o_force_ltr"/>
+                                    </group>
+                                    <group string="Education">
+                                        <field name="certificate"/>
+                                        <field name="study_field"/>
+                                        <field name="study_school"/>
+                                        <separator name="has_work_permit" string="Work Permit"/>
+                                        <field name="visa_no"/>
+                                        <field name="permit_no"/>
+                                        <field name="visa_expire"/>
+                                        <field name="work_permit_expiration_date"/>
+                                        <field name="work_permit_name" invisible="1"/>
+                                        <field name="has_work_permit" widget="work_permit_upload" filename="work_permit_name"/>
+                                    </group>
+                                    <group string="Citizenship">
+                                        <field name="country_id" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>
+                                        <field name="identification_id"/>
+                                        <field name="ssnid"/>
+                                        <field name="passport_id"/>
+                                        <field name="gender"/>
+                                        <field name="birthday"/>
+                                        <field name="place_of_birth"/>
+                                        <field name="country_of_birth"/>
+                                    </group>
+                                </group>
+                            </page>
+                </xpath>
+                 <xpath expr="//page[@name='hr_settings']" position="replace">
+                    <page name="hr_settings" string="HR Settings" invisible="is_admin_user_employee == False" groups="hr.group_hr_user">
+                                    <group>
+                                        <group string="Status" name="active_group">
+                                            
+                                            <field name="employee_type"/>
+                                            <field name="user_id" string="Related User" domain="[('company_ids', 'in', company_id), ('share', '=', False)]" context="{'default_create_employee_id': id}" widget="many2one_avatar_user"/>
+                                        </group>
+                                        <group string="Attendance/Point of Sale" name="identification_group">
+                                            <field name="pin" string="PIN Code"/>
+                                            <field name="allowed_users" widget="many2many_tags" />
+                                            <label for="barcode"/>
+                                            <div class="o_row">
+                                                <field name="barcode"/>
+                                                <button string="Generate" class="btn btn-link" type="object" name="generate_random_barcode" invisible="barcode"/>
+                                                <button name="201" string="Print Badge" class="btn btn-link" type="action" invisible="not barcode"/>
+                                            </div>
+                                        </group>
+                                        <group string="Payroll" name="payroll_group" invisible="1">
+                                        </group>
+                                        <group name="application_group" string="Application Settings" invisible="1"/>
+                                    </group>
+                                </page>
+                 </xpath>
+                <xpath expr="//div[@class='oe_chatter']" position="replace">
+                  <div class="oe_chatter" invisible="is_admin_user_employee == False" >
+                        <field name="message_follower_ids" groups="base.group_user" options="{'post_refresh': 'recipients'}"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </xpath>
+              <sheet>
+                <group>
+                    <field name="employee_certification_sequence" invisible="1"/>
+                    <field name="is_manager_user" invisible="1"/>
+                   
+                </group>
+            </sheet>
+        </field>
+    </record>
+
+
+    <record id="hr_employee_view_form" model="ir.ui.view">
+        <field name="name">hr.employee.view.form.inherit.appraisal</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="priority" eval="300"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <field name="parent_user_id" invisible="1"/>
+                <field name="ongoing_appraisal_count" invisible="1"/>
+                <button name="action_send_appraisal_request"
+                    string="Request Appraisal"
+                    type="object"
+                    data-hotkey="g"
+                    groups="!hr_appraisal.group_hr_appraisal_user"
+                    class="btn btn-primary"
+                    invisible="is_manager_user == False or (parent_user_id != uid and ongoing_appraisal_count != 0)"/>
+                <button name="action_send_appraisal_request"
+                    string="Request Appraisal"
+                    type="object"
+                    data-hotkey="g"
+                    groups="hr_appraisal.group_hr_appraisal_user"
+                    invisible="is_manager_user == False or ongoing_appraisal_count != 0"
+                    class="btn btn-primary"/>
+            </xpath>
+            <div name="button_box" position="inside">
+                <field name="appraisal_count" invisible="1"/>
+                <field name="ongoing_appraisal_count" invisible="1"/>
+                <field name="last_appraisal_id" invisible="1"/>
+                <button name="action_open_last_appraisal"
+                    class="oe_stat_button" invisible="not last_appraisal_id"
+                    icon="fa-star-half-o"
+                    type="object">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="last_appraisal_date" readonly="1"/>
+                        </span>
+                        <span class="o_stat_text">
+                            Last Appraisal
+                        </span>
+                    </div>
+                </button>
+            </div>
+            <group name="application_group" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </group>
+            <group name="application_group" position="inside">
+                <field name="parent_user_id" invisible="1"/>
+            </group>
+            <field name="coach_id"  readonly="is_admin_user_employee == False" position="after">
+                <field name="next_appraisal_date"  readonly="is_logged_user_employee == False" invisible="ongoing_appraisal_count != 0"/>
+                <field name="next_appraisal_date"  readonly="is_logged_user_employee == False" placeholder="Ongoing" invisible="ongoing_appraisal_count == 0"/>
+            </field>
+        </field>
+    </record>
+
+
+
+
+    <record id="action_report_employment_certificate" model="ir.actions.report">
+        <field name="name">Employment Certificate</field>
+        <field name="model">hr.employee</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">custom_employee_reports.report_employment_certificate</field>
+        <field name="binding_model_id" ref="hr.model_hr_employee"/>
+    </record>
+
+    <record id="action_report_employment_salary" model="ir.actions.report">
+        <field name="name">Employment Salary Letter</field>
+        <field name="model">hr.employee</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">custom_employee_reports.report_employment_salary_letter</field>
+        <field name="binding_model_id" ref="hr.model_hr_employee"/>
+    </record>
+
+    <record id="action_report_no_objection_certificate" model="ir.actions.report">
+        <field name="name">Employment Objection Certificate</field>
+        <field name="model">hr.employee</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">custom_employee_reports.report_no_objection_certificate</field>
+        <field name="binding_model_id" ref="hr.model_hr_employee"/>
+    </record>
+
+    <record id="action_report_salary_transfer_letter" model="ir.actions.report">
+        <field name="name">Report Salary Transfer Letter</field>
+        <field name="model">hr.employee</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">custom_employee_reports.report_salary_transfer_letter</field>
+        <field name="binding_model_id" ref="hr.model_hr_employee"/>
+    </record>
+
+    <record id="view_hr_contract_form_inherit" model="ir.ui.view">
+        <field name="name">hr.contract.form.inherit</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='wage']" position="after">
+                <field name="wage_in_words" readonly="1"/>
+            </xpath>
+           
+
+            <xpath expr="//field[@name='employee_id']" position="attributes">
+                <attribute name="readonly">is_admin_user_employee == False</attribute>
+            </xpath>
+            <xpath expr="//field[@name='date_start']" position="attributes">
+                <attribute name="readonly">is_admin_user_employee == False</attribute>
+            </xpath>
+            <xpath expr="//field[@name='date_end']" position="attributes">
+                <attribute name="readonly">is_admin_user_employee == False</attribute>
+            </xpath>
+             <xpath expr="//field[@name='resource_calendar_id']" position="attributes">
+                <attribute name="readonly">is_admin_user_employee == False</attribute>
+            </xpath>
+            <xpath expr="//field[@name='resource_calendar_id']" position="attributes">
+                <attribute name="readonly">is_admin_user_employee == False</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='structure_type_id']" position="attributes">
+                <attribute name="readonly">is_admin_user_employee == False</attribute>
+            </xpath>
+            <xpath expr="//field[@name='department_id']" position="attributes">
+                <attribute name="readonly">is_admin_user_employee == False</attribute>
+            </xpath>
+            <xpath expr="//field[@name='job_id']" position="attributes">
+                <attribute name="readonly">is_admin_user_employee == False</attribute>
+            </xpath>
+             <xpath expr="//field[@name='contract_type_id']" position="attributes">
+                <attribute name="readonly">is_admin_user_employee == False</attribute>
+            </xpath>
+            <xpath expr="//field[@name='wage']" position="attributes">
+                <attribute name="readonly">is_admin_user_employee == False</attribute>
+            </xpath>
+
+
+            <sheet>
+                <group>
+                    <field name="is_admin_user_employee" invisible="1"/>
+                </group>
+            </sheet>
+        </field>
+    </record>
+
+  </data>
+</odoo>
