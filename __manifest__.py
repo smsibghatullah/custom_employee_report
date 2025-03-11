@@ -11,13 +11,15 @@ Long description of module's purpose
     'version': '0.1',
     'depends': ['base', 'hr','hr_holidays','hr_skills','hr_contract', 'hr_appraisal', 'hr_expense','spreadsheet_dashboard','mail'],
     'data': [
+        'data/hr_employee_sequence.xml',
         'security/ir.model.access.csv',
         'views/report_views.xml',
         'views/expense_view.xml',
         'views/dashboard_view.xml',
         'views/appraisal_view.xml',
         'views/templates.xml',
-        'data/hr_employee_sequence.xml',
+        'views/travel_authrization_view.xml',
+        
     ],
     'assets': {
         'web.assets_backend': [

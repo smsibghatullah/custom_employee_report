@@ -1,0 +1,128 @@
+<odoo>
+<data>
+    <record id="view_travel_authorization_tree" model="ir.ui.view">
+        <field name="name">travel.authorization.tree</field>
+        <field name="model">travel.authorization</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="employee_id"/>
+                <field name="destination"/>
+                <field name="purpose"/>
+                <field name="meeting_start"/>
+                <field name="meeting_end"/>
+                <field name="num_nights"/>
+                <field name="state" widget="badge"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_travel_authorization_form" model="ir.ui.view">
+        <field name="name">travel.authorization.form</field>
+        <field name="model">travel.authorization</field>
+        <field name="arch" type="xml">
+            <form string="Travel Authorization"> 
+                <header>
+                    <field name="show_accept_button" invisible="1"/>
+                    <field name="show_manager_approve_button" invisible="1"/>
+                    <field name="show_hr_approve_button" invisible="1"/>
+                    <field name="show_finance_manager_approve_button" invisible="1"/>
+                    <field name="show_chief_finance_officer_approve_button" invisible="1"/>
+                    <field name="finance_officer_check" invisible="1"/>
+                    <field name="chief_finance_officer_check" invisible="1"/>
+                    <button name="action_accept" string="Accept" type="object" 
+                            invisible="state != 'draft' or  show_accept_button == False"  
+                            class="oe_highlight"/>
+                    <button name="action_approve_manager" string="Approve by Manager" type="object" 
+                            invisible="state != 'accept' or  show_manager_approve_button == False"
+                            class="oe_highlight"/>
+                    <button name="action_approve_hr" string="Approve by HR" type="object" 
+                            invisible="state != 'approve_manager' or  show_hr_approve_button == False"  
+                            class="oe_highlight"/>
+                    <button name="action_approve_finance" string="Approve by Finance" type="object"
+                            invisible="finance_officer_check == True or show_finance_manager_approve_button == False"   
+                            class="oe_highlight"/>
+                    <button name="action_approve_chief_finance" string="Approve by Chief Finance Officer" type="object"
+                            invisible="chief_finance_officer_check == True or show_chief_finance_officer_approve_button == False"  
+                            class="oe_highlight"/>
+                     <button name="print_travel_authorization" type="object" string="Print Report"  invisible="state != 'completed'"  class="btn-primary"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,accept,approve_manager,approve_hr,completed"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="is_editable" invisible="1"/>
+                            <field name="employee_id" readonly="is_editable == False"/>
+                            <field readonly="1" name="job_position"/>
+                        </group>
+                        <group>
+                            <field name="staff_grade" readonly="is_editable == False"/>
+                            <field name="staff_no" readonly="is_editable == False"/>
+                        </group>
+                        <group>
+                            <field name="unit" readonly="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="destination" readonly="is_editable == False"/>
+                            <field name="purpose" readonly="is_editable == False"/>
+                        </group>
+                        <group>
+                            <field name="organizer" readonly="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="meeting_start" readonly="is_editable == False"/>
+                            <field name="meeting_end" readonly="is_editable == False"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Travel Details">
+                            <field name="travel_details_ids" readonly="is_editable == False">
+                                <tree editable="bottom">
+                                    <field name="departure_from"/>
+                                    <field name="arrival_to"/>
+                                    <field name="travel_date"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                    <group>
+                        <group>
+                            <field name="accommodation_by" readonly="is_editable == False"/>
+                            <field name="num_nights" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="accommodation_dates" readonly="1"/>
+                        </group>
+                    </group>
+                </sheet>
+                 <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_travel_authorization" model="ir.actions.act_window">
+        <field name="name">Travel Authorization</field>
+        <field name="res_model">travel.authorization</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="action_report_travel_authorization" model="ir.actions.report">
+        <field name="name">Travel Authorization</field>
+        <field name="model">travel.authorization</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">custom_employee_reports.report_travel_authorization</field>
+        <field name="binding_model_id" ref="model_travel_authorization"/>
+    </record>
+
+   
+    <menuitem id="menu_travel_authorization" name="Travel Authorization" parent="hr_expense.menu_hr_expense_root"  groups="custom_employee_reports.group_travel_form_access" action="action_travel_authorization"/>
+
+    
+    </data>
+</odoo>

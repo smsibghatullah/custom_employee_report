@@ -5,3 +5,4 @@ from . import appraisal
 from . import expense
 from . import dashboard
 from . import hr_public
+from . import travel_authrization

@@ -9,6 +9,7 @@ class InitialRating(models.Model):
 
 class HrAppraisal(models.Model):
     _inherit = 'hr.appraisal'
+    
 
     initial_rating_id = fields.Many2one('initial.rating', string="Initial Ratings" , domain="[('company_id', '=', company_id)]")
     is_admin_user_employee = fields.Boolean(

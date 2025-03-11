@@ -140,7 +140,7 @@
               <t t-set="company" t-value="employee.company_id" />
 
               <main>
-                   <div style="text-align: right; margin-bottom: 20px;">
+                <div style="text-align: right; margin-bottom: 20px;">
                     <!-- <img t-if="company.logo" t-att-src="'/web/image/res.company/' + str(company.id) + '/logo'" style="max-height: 80px;" /> -->
                 </div>
 
@@ -493,6 +493,184 @@
             </div>
         </t>
      </template>
+
+     <template id="report_travel_authorization">
+        <t t-call="web.external_layout">
+            <t t-foreach="docs" t-as="doc">
+             <main>
+                 <div class="page">
+                       <t t-set="company" t-value="doc.employee_id.company_id" />
+                        <div style="text-align: left; font-size: 16px;">
+                            Date: <span t-esc="time.strftime('%d %b %Y')"/>
+                        </div>
+                        <br/>
+                        <table class="table" style="width: 100%; border: 3px solid black; border-collapse: collapse;">
+                             <tr>
+                                <td colspan="4" style="border: 3px solid black; padding: 20px;font-weight:bold;text-align: center; font-size: 16px; ">TRAVEL AUTHORISATION FORM</td>
+                               
+                            </tr>
+                            <tr>
+                                <td style="border: 3px solid black; padding: 20px;font-weight:bold">Employee Name:</td>
+                                <td colspan="3" style="border: 3px solid black; padding: 20px;" ><t t-esc="doc.employee_id.name"/></td>
+                               
+                            </tr>
+                            <tr>
+                                <td style="border: 3px solid black; padding: 20px;font-weight:bold">Position:</td>
+                                <td style="border: 3px solid black; padding: 20px;" ><t t-esc="doc.job_position.name"/></td>
+                                <td style="border: 3px solid black; padding: 20px;font-weight:bold">Staff Grade:</td>
+                                <td style="border: 3px solid black; padding: 20px;" ><t t-esc="doc.staff_grade"/></td>
+                            </tr>
+                            <tr>
+                                <td style="border: 3px solid black; padding: 20px;font-weight:bold">Unit:</td>
+                                <td  style="border: 3px solid black; padding: 20px;" ><t t-esc="doc.unit"/></td>
+                                <td style="border: 3px solid black; padding: 20px;font-weight:bold">Staff No.:</td>
+                                <td style="border: 3px solid black; padding: 20px;" ><t t-esc="doc.staff_no"/></td>
+                                
+                            </tr>
+                        </table>
+                        
+                        <table class="table" style="width: 100%; border: 3px solid black; border-collapse: collapse; margin-top: 10px;">
+                            <tr>
+                                <td style="border: 3px solid black; padding: 20px;font-weight:bold">Destination:</td>
+                                <td colspan="3" style="border: 3px solid black; padding: 20px;" ><t t-esc="doc.destination"/></td>
+                            </tr>
+                            <tr>
+                                <td style="border: 3px solid black; padding: 20px;font-weight:bold">Purpose of the trip:</td>
+                                <td colspan="3" style="border: 3px solid black; padding: 20px;" ><t t-esc="doc.purpose"/></td>
+                            </tr>
+                            <tr>
+                                <td style="border: 3px solid black; padding: 20px;font-weight:bold">Organizer/Company:</td>
+                                <td colspan="3" style="border: 3px solid black; padding: 20px;" ><t t-esc="doc.organizer.name"/></td>
+                            </tr>
+                            <tr>
+                                <td style="border: 3px solid black; padding: 20px;font-weight:bold">Meeting/Event Dates:</td>
+                                <td colspan="1" style="border: 3px solid black; padding: 20px;"><span style="font-weight:bold">From</span> <t t-esc="doc.meeting_start"/></td>
+                                <td colspan="1" style="border: 3px solid black; padding: 20px;" ><span style="font-weight:bold">To</span> <t t-esc="doc.meeting_end"/></td>
+                            </tr>
+                            <tr>
+                               <td style="border: 3px solid black; padding: 20px;font-weight:bold">Travel Dates:</td>
+                               <td colspan="3" style="border: 3px solid black;">
+                               <table style="width: 100%;">
+                                    <tr>
+                                        <th style="border: 3px solid black; padding: 20px;font-weight:bold">Details</th>
+                                        <th style="border: 3px solid black; padding: 20px;font-weight:bold">City</th>
+                                        <th style="border: 3px solid black; padding: 20px;font-weight:bold">Date</th>
+                                    </tr>
+                                    <t t-foreach="doc.travel_details_ids" t-as="travel">
+                                        <tr>
+                                            <td style="border: 3px solid black; padding: 20px;">Departure from:</td>
+                                            <td style="border: 3px solid black; padding: 20px;">
+                                                <t t-esc="travel.departure_from"/>
+                                            </td>
+                                            <td style="border: 3px solid black; padding: 20px;">
+                                                <t t-esc="travel.travel_date.strftime('%d %b %Y') if travel.travel_date else ''"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="border: 3px solid black; padding: 20px;">Arrival to:</td>
+                                            <td style="border: 3px solid black; padding: 20px;">
+                                                <t t-esc="travel.arrival_to"/>
+                                            </td>
+                                            <td style="border: 3px solid black; padding: 20px;">
+                                                <t t-esc="travel.travel_date.strftime('%d %b %Y') if travel.travel_date else ''"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </table>
+                               </td>
+                            </tr>
+                        </table>
+
+                        <div style="page-break-after: always;"></div>
+
+                        <table class="table" style="width: 100%; border: 3px solid black;">
+                           <tr>
+                                <td style="border: 3px solid black; padding: 20px;font-weight:bold">Accommodation paid by:</td>
+                                <td colspan="3" style="border: 3px solid black; padding: 20px;" ><t t-esc="doc.accommodation_by"/></td>
+                            </tr>
+                             <tr>
+                                <td style="border: 3px solid black; padding: 20px;font-weight:bold">Number Accommodation Nights:</td>
+                                <td colspan="3" style="border: 3px solid black; padding: 20px;" ><t t-esc="doc.num_nights"/></td>
+                            </tr>
+                            <tr>
+                                <td style="border: 3px solid black; padding: 20px;font-weight:bold">Dates of Accommodation Nights:</td>
+                                <td colspan="3" style="border: 3px solid black; padding: 20px;" ><t t-esc="doc.accommodation_dates"/></td>
+                            </tr>
+                        </table>
+
+                        <table class="table" style="width: 100%; border: 3px solid black;">
+                            <tr>
+                                <td colspan="4" style="padding: 20px; font-weight: bold;">
+                                    Employee Signature:
+                                    <span style="border-bottom: 2px solid black; text-align:center">
+                                    <t t-if="doc.employee_check">
+                                        <t t-esc="doc.employee_id.name"/>
+                                    </t>
+                                    </span>
+                                </td>
+                            </tr>
+                             <tr>
+                                <td colspan="4" style="padding: 20px; font-weight: bold;">
+                                     Approver Signature:
+                                    <span style="border-bottom: 2px solid black; text-align:center">
+                                                                       <t t-if="doc.manager_check">
+                                        <t t-esc="doc.approved_by.name"/>
+                                    </t>
+                                    </span>
+                                </td>
+                            </tr>
+                        </table>
+
+                         <table class="table" style="width: 100%; border: 3px solid black;">
+                            <tr>
+                                <td colspan="4" style="padding: 20px; font-weight: bold;">
+                                     Prepared by:
+                                    <span style="border-bottom: 2px solid black; text-align:center">
+                                        <t t-esc="doc.create_uid.name"/>
+                                    </span>
+                                </td>
+                            </tr>
+                             <tr>
+                                <td colspan="4" style="padding: 20px; font-weight: bold;">
+                                     Reviewed and Approved by:
+                                    <span style="border-bottom: 2px solid black; text-align:center">
+                                                                     <t t-if="doc.hr_check">
+                                        HR Manager: <t t-esc="doc.approve_by_hr.name"/>
+                                    </t>
+                                    </span>
+                                    <br/>
+                                      <span style="border-bottom: 2px solid black; text-align:center;margin-left:203px">
+                                                                 <t t-if="doc.finance_officer_check">
+                                        Finance Officer: <t t-esc="doc.approved_by_finance_officer.name"/>
+                                    </t>
+                                    </span>
+                                    <br/>
+                                      <span style="border-bottom: 2px solid black; text-align:center;margin-left:203px">
+                                                     <t t-if="doc.chief_finance_officer_check">
+                                        Chief Finance Officer: <t t-esc="doc.approved_by_chief_finance_officer.name"/>
+                                    </t>
+                                    </span>
+                                </td>
+                            </tr>
+                        </table>
+
+                     <div>
+                        <h4>Guidelines:</h4>
+                        <ul>
+                            <li>Please make sure all details are accurate and complete.</li>
+                            <li>The allowance will not be processed until a confirmed ticket and hotel booking is provided.</li>
+                            <li>If you have multiple destinations, include full details.</li>
+                            <li>If your accommodation is paid by another party, specify exact dates.</li>
+                            <li>Provide details of early/late check-in if applicable.</li>
+                            <li>If the trip is changed or canceled, notify your manager.</li>
+                        </ul>
+                    </div>
+                    </div>
+                 </main>
+              </t>
+        </t>
+    </template>
+
 
     </data>
 </odoo>
