@@ -27,10 +27,11 @@ class TravelAuthorization(models.Model):
     approved_by_chief_finance_officer = fields.Many2one('res.users', string='Reviewed & Approved By Chief Finance Officer')
     state = fields.Selection([
         ('draft', 'Draft'),
-        ('accept', 'Accept'),
-        ('approve_manager', 'Approve by Manager'),
-        ('approve_hr', 'Approve by HR'),
-        ('completed', 'Completed')
+        ('accept', 'Accepted'),
+        ('approve_manager', 'Approved by Manager'),
+        ('approve_hr', 'Approved by HR'),
+        ('completed', 'Completed'),
+        ('rejected', 'Rejected')
     ], string='Status', default='draft')
     show_accept_button = fields.Boolean(compute="_compute_show_accept_button")
     show_manager_approve_button = fields.Boolean(compute="_compute_show_manager_approve_button")
@@ -45,8 +46,7 @@ class TravelAuthorization(models.Model):
     finance_officer_check = fields.Boolean(default=False)
     chief_finance_officer_check = fields.Boolean(default=False)
     show_chief_finance_officer_approve_button = fields.Boolean(compute="_compute_show_chief_finance_officer_approve_button")
-       
-    
+
     def _compute_show_chief_finance_officer_approve_button(self):
         """Compute if the 'Approve by Finance' button should be visible."""
         for record in self:
@@ -82,7 +82,7 @@ class TravelAuthorization(models.Model):
         """Compute if the 'Approve by Finance' button should be visible."""
         for record in self:
             user = self.env.user
-            job = self.env['hr.job'].search([('name', '=', 'Finance Officer')], limit=1)
+            job = self.env['hr.job'].search([('name', '=', 'Finance Manager')], limit=1)
             employees = self.env['hr.employee'].search([('job_id', '=', job.id)])
             if record.state == 'approve_hr':
                 record.show_finance_manager_approve_button = any(emp.user_id.id == user.id for emp in employees)
@@ -126,6 +126,29 @@ class TravelAuthorization(models.Model):
         """ Show button only if the logged-in user is the selected employee """
         for record in self:
             record.show_accept_button = record.employee_id.user_id == self.env.user
+
+    def action_reject_employee(self):
+        self.state = 'rejected'
+        channel = self.env['discuss.channel'].search([
+                    ('channel_type', '=', 'chat'),
+                    ('channel_partner_ids', 'in', [self.env.user.partner_id.id]),
+                    ('channel_partner_ids', 'in', [self.create_uid.partner_id.id])
+                ], limit=1)
+
+        if not channel:
+            channel = self.env['discuss.channel'].create({
+                'name': f'Chat between {self.env.user.name} and {self.create_uid.partner_id.name}',
+                'channel_type': 'chat',
+                'channel_partner_ids': [(4, self.env.user.partner_id.id), (4, self.create_uid.partner_id.id)]
+            })
+
+        if channel:
+            channel.message_post(
+                body="The travel authorization has been rejected.",
+                message_type="comment",
+                subtype_xmlid="mail.mt_comment",
+                author_id=self.env.user.partner_id.id
+            )
 
 
     def action_accept(self):
@@ -191,7 +214,7 @@ class TravelAuthorization(models.Model):
         self.state = 'approve_hr'
         self.hr_check = True
         self.approve_by_hr = self.env.user.id
-        job = self.env['hr.job'].search([('name', '=', 'Finance Officer')], limit=1)
+        job = self.env['hr.job'].search([('name', '=', 'Finance Manager')], limit=1)
         employees = self.env['hr.employee'].search([('job_id', '=', job.id)])
         chief_finance_officer_job = self.env['hr.job'].search([('name', '=', 'Chief Financial Officer')], limit=1)
         chief_finance_officer_employees = self.env['hr.employee'].search([('job_id', '=', chief_finance_officer_job.id)])
@@ -323,6 +346,7 @@ class TravelAuthorizationDetails(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
     travel_id = fields.Many2one('travel.authorization', string='Travel Authorization')
+    travel_form_id = fields.Many2one('travel.authorization.form', string='Travel Authorization')
     departure_from = fields.Char(string='Departure From')
     arrival_to = fields.Char(string='Arrival To')
     travel_date = fields.Date(string='Date')

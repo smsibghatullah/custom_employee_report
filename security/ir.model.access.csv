@@ -5,6 +5,5 @@ access_hr_contract_manager,access.hr.contract.manager,model_hr_contract,hr.group
 access_employee_dashboard_manager,access.employee.dashboard.manager,model_employee_dashboard,hr.group_hr_manager,1,1,1,1
 access_hr_employee_user,access.hr.employee.user,model_hr_employee,base.group_user,1,1,1,1
 access_travel_authorization_user,access.travel.authorization.user,model_travel_authorization,base.group_user,1,1,1,1
-access_travel_authorization_details_user,access.travel.authorization.details.user,model_travel_authorization_details,group_travel_form_access,1,1,1,1
-
-
+access_travel_authorization_details_user,access.travel.authorization.details.user,model_travel_authorization_details,base.group_user,1,1,1,1
+access_travel_authorization_form_user,access.travel.authorization.form.user,model_travel_authorization_form,custom_employee_reports.group_travel_form_access,1,1,1,1

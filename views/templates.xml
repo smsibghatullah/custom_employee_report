@@ -414,7 +414,7 @@
             <div t-attf-class="header o_company_#{company.id}_layout" t-att-style="report_header_style">
                 <div class="row">
                     <div class="col-12 mb4">
-                        <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" style="max-height: 100px;float: right;" alt="Logo"/>
+                        <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" style="max-height: 250px;float: right;max-width: 300px" alt="Logo"/>
                     </div>
                     <div class="col-9 text-end" style="margin-top:22px;" t-if="company.report_header" t-field="company.report_header" name="moto">Company tagline</div>
                 </div>
@@ -641,7 +641,7 @@
                                     <br/>
                                       <span style="border-bottom: 2px solid black; text-align:center;margin-left:203px">
                                                                  <t t-if="doc.finance_officer_check">
-                                        Finance Officer: <t t-esc="doc.approved_by_finance_officer.name"/>
+                                        Finance Manager: <t t-esc="doc.approved_by_finance_officer.name"/>
                                     </t>
                                     </span>
                                     <br/>
@@ -657,12 +657,13 @@
                      <div>
                         <h4>Guidelines:</h4>
                         <ul>
-                            <li>Please make sure all details are accurate and complete.</li>
-                            <li>The allowance will not be processed until a confirmed ticket and hotel booking is provided.</li>
-                            <li>If you have multiple destinations, include full details.</li>
-                            <li>If your accommodation is paid by another party, specify exact dates.</li>
-                            <li>Provide details of early/late check-in if applicable.</li>
-                            <li>If the trip is changed or canceled, notify your manager.</li>
+                            <li>Ensure all details are accurate and complete for quick processing of allowances and hotel claims.</li>
+                            <li>Provide correspondence emails related to your approved trip.</li>
+                            <li>Allowance will not be processed without a confirmed ticket and hotel booking.</li>
+                            <li>For trips with more than two destinations, include full details and copy the table if needed.</li>
+                            <li>If accommodation is paid by another party, specify the exact dates.</li>
+                            <li>Provide details of early check-in or late check-out if applicable.</li>
+                            <li>If the approved trip is changed or canceled for business reasons, notify your manager, get approval, and inform concerned departments.</li>
                         </ul>
                     </div>
                     </div>
